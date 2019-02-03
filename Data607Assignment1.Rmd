@@ -1,0 +1,45 @@
+---
+title: "Data 607 Assignment 1"
+author: "Diandra Hanna"
+date: "1/30/2019"
+output: 
+  html_document:
+    theme: yeti
+    highlight: tango
+---
+##Loading Data into a Data Frame
+[Mushroom Dataset](https://archive.ics.uci.edu/ml/machine-learning-databases/mushroom/)
+
+```{r}
+library(ggplot2)
+library(knitr)
+url <- 'https://archive.ics.uci.edu/ml/machine-learning-databases/mushroom/agaricus-lepiota.data'
+shroom <- read.csv(file = url, header = FALSE, sep =',')
+```
+
+###Column Names
+```{r}
+colnames(shroom)<-c("toxicity","cap-shape","cap-surface","cap-color","bruises","odor","gill-attachment","gill-spacing","gill-size","gill-color","stalk-shape","stalk-root","stalk-surface-above-ring","stalk-surface-below-ring","stalk-color-above-ring","stalk-color-below-ring","veil-type","veil-color","ring-number","ring-type","spore-print-color","population","habitat")
+colnames(shroom)
+```
+
+###Subsetting Data into a Data Frame
+```{r}
+df <- subset(shroom, select = c(1, 2, 4, 5, 23))
+head(df)
+```
+
+###Rename Data 
+```{r}
+levels(df$toxicity) <- c('edible', 'poisionous')
+levels(df$`cap-shape`) <-c('bell', 'conical', 'convex', 'flat', 'knobbed', 'sunken')
+levels(df$`cap-color`) <-c('brown', 'buff', 'cinnamon', 'gray', 'green', 'pink', 'purple', 'red', 'white', 'yellow')
+levels(df$bruises) <-c('bruises', 'no bruises')
+levels(df$habitat) <-c('grasses', 'leaves', 'meadows', 'paths', 'urban', 'waste', 'woods')
+head(df)
+```
+
+```{r}
+g <-ggplot(df, aes(habitat, fill = toxicity)) +scale_fill_manual(values=c("#99F5A6", "#4E0FAE"))
+g + geom_bar(position = "stack") + labs(x = "Habitat", y = "Number of Mushrooms") + ggtitle("Mushroom Toxicity by Habitat")+theme(plot.title = element_text(hjust = 0.5))
+```
